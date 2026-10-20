@@ -66,3 +66,6 @@ a service binding named `NAICONS` to this worker. This project has no DNS routes
 or public workers.dev endpoint. It deploys independently of the personal site.
 
 Decorative contour lines are original synthetic vector artwork, not geographic elevation data.
+
+The map fills the viewport behind the collection. The icon sheet scrolls in the
+lower half, while selected cities stay visible in the exposed map above it.

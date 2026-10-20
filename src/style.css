@@ -27,7 +27,9 @@ body {
 main {
   max-width: 1240px;
   margin: auto;
-  padding: 0 28px 24px;
+  padding: 0 28px;
+  height: 100svh;
+  overflow: hidden;
 }
 a {
   color: inherit;
@@ -78,18 +80,31 @@ header nav {
 header nav a {
   text-decoration: none;
 }
-.atlas-frame {
-  border: 1px solid #cfc1a6;
-  border-radius: 5px;
-  overflow: hidden;
-  box-shadow: 0 1px 3px #6b57380a;
+/* The atlas is a single viewport-wide layer behind the sheet. */
+main {
+  position: relative;
+  pointer-events: none;
+}
+header,
+#collection,
+footer {
+  position: relative;
+  z-index: 2;
+  pointer-events: auto;
+}
+#atlas {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: auto;
+}
+.atlas-frame,
+.map-area {
+  width: 100%;
+  height: 100%;
 }
 .map-area {
   position: relative;
-  height: 430px;
-  background:
-    url("/naicons/contours.svg") center / 1400px 900px,
-    radial-gradient(ellipse, #f6ead5, #eddbc0);
 }
 #map {
   display: block;
@@ -103,8 +118,8 @@ header nav a {
 }
 .map-label {
   position: absolute;
-  left: 17px;
-  top: 14px;
+  left: max(28px, calc((100vw - 1184px) / 2));
+  top: 80px;
   font:
     10px ui-monospace,
     monospace;
@@ -113,8 +128,8 @@ header nav a {
 }
 .map-hint {
   position: absolute;
-  left: 17px;
-  bottom: 13px;
+  left: max(28px, calc((100vw - 1184px) / 2));
+  top: 102px;
   font-size: 10px;
   color: var(--muted);
   pointer-events: none;
@@ -167,8 +182,9 @@ header nav a {
 }
 .map-controls {
   position: absolute;
-  right: 12px;
-  bottom: 12px;
+  right: max(28px, calc((100vw - 1184px) / 2));
+  top: 76px;
+  height: fit-content;
   display: flex;
   border: 1px solid var(--line);
   border-radius: 4px;
@@ -193,12 +209,18 @@ header nav a {
   display: flex;
   gap: 12px;
   align-items: center;
-  padding: 10px 16px;
-  border-top: 1px solid var(--line);
-  background: #f8eedb;
+  position: absolute;
+  left: max(28px, calc((100vw - 1184px) / 2));
+  bottom: calc(50% + 28px);
+  max-width: 310px;
+  flex-wrap: wrap;
+  padding: 0;
+  text-shadow:
+    0 1px 5px var(--paper),
+    0 0 12px var(--paper);
 }
 .city-detail img {
-  object-fit: contain;
+  display: none;
 }
 .detail-name {
   min-width: 0;
@@ -213,7 +235,7 @@ header nav a {
   margin: 1px 0;
 }
 .detail-links {
-  margin-left: auto;
+  width: 100%;
   display: flex;
   align-items: center;
   gap: 17px;
@@ -233,9 +255,42 @@ header nav a {
   color: var(--muted);
 }
 #collection {
-  padding-top: 20px;
+  margin-top: calc(50svh - 63px);
+  padding-top: 0;
+  isolation: isolate;
+  height: 50svh;
+  overflow-y: auto;
+  overscroll-behavior-y: contain;
+  scrollbar-width: thin;
+  scrollbar-color: #bfa184 transparent;
+  padding-bottom: 24px;
 }
+body::after {
+  content: "";
+  position: fixed;
+  z-index: 1;
+  pointer-events: none;
+  height: calc(50svh + 85px);
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background: linear-gradient(
+    to bottom,
+    rgb(245 234 214 / 0),
+    rgb(245 234 214 / 0.76) 130px,
+    rgb(245 234 214 / 0.94) 420px
+  );
+}
+footer {
+  background: rgb(245 234 214 / 0.94);
+}
+
 #filters {
+  position: sticky;
+  top: 0;
+  z-index: 4;
+  padding-bottom: 8px;
+  background: transparent;
   display: flex;
   gap: 10px;
   align-items: center;
@@ -421,7 +476,7 @@ details p {
 }
 @media (max-width: 700px) {
   main {
-    padding: 0 14px 18px;
+    padding: 0 14px;
   }
   header {
     height: 53px;
@@ -437,12 +492,24 @@ details p {
     font-size: 11px;
     gap: 15px;
   }
-  .map-area {
-    height: 340px;
+  #collection {
+    margin-top: calc(50svh - 53px);
+  }
+  .map-label {
+    left: 14px;
+    top: 67px;
+  }
+  .map-controls {
+    right: 14px;
+    top: 61px;
+  }
+  .city-detail {
+    left: 14px;
+    max-width: 190px;
+    bottom: calc(50% + 22px);
   }
   .map-hint {
-    font-size: 8px;
-    bottom: 18px;
+    display: none;
   }
   .map-controls button {
     width: 36px;
@@ -492,8 +559,8 @@ details p {
     height: 92px;
   }
   .city-detail {
-    padding: 9px 10px;
-    gap: 8px;
+    padding: 0;
+    gap: 6px;
     flex-wrap: wrap;
   }
   .city-detail img {
@@ -502,8 +569,8 @@ details p {
   }
   .detail-links {
     width: 100%;
-    margin-left: 52px;
-    gap: 20px;
+    margin-left: 0;
+    gap: 12px;
   }
   .detail-links #close-city {
     margin-left: auto;
@@ -577,4 +644,9 @@ details p {
   .sort-arrow {
     transition: none;
   }
+}
+
+#collection.scrolled #filters {
+  background: var(--paper);
+  box-shadow: 0 8px 12px var(--paper);
 }

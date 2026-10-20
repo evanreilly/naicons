@@ -73,7 +73,12 @@ function fly() {
   const [x, y] = projection([selected.longitude, selected.latitude]);
   const k = Math.max(1.8, current.k);
   move(
-    zoomIdentity.translate(width * 0.5 - k * x, height * 0.58 - k * y).scale(k),
+    zoomIdentity
+      .translate(
+        width * (width < 700 ? 0.7 : 0.6) - k * x,
+        height * 0.29 - k * y,
+      )
+      .scale(k),
   );
 }
 function resize() {
@@ -84,7 +89,7 @@ function resize() {
   projection.fitExtent(
     [
       [22, 30],
-      [width - 22, height - 35],
+      [width - 22, height * 0.72],
     ],
     land,
   );
@@ -97,7 +102,8 @@ function resize() {
     [width, height],
   ]);
   svg.call(behavior.transform, zoomIdentity);
-  placeMarker();
+  if (selected) fly();
+  else placeMarker();
 }
 new ResizeObserver(resize).observe($("map"));
 function choose(
@@ -218,6 +224,13 @@ $("icon-grid").addEventListener("click", (event) => {
       { fly: true, scroll: false },
     );
 });
+$("collection").addEventListener(
+  "scroll",
+  () => {
+    $("collection").classList.toggle("scrolled", $("collection").scrollTop > 8);
+  },
+  { passive: true },
+);
 $("filters").addEventListener("submit", (event) => event.preventDefault());
 $("search").addEventListener("input", update);
 $("sort").addEventListener("click", () => {
