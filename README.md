@@ -4,7 +4,9 @@
 
 544 transparent, 1024 × 1024 city icons made for [TrainGame](https://traingame.io),
 with a searchable directory and interactive map. The default order is population,
-smallest first. Search city names, states/provinces, countries, or icon subjects.
+smallest first. Click Population to reverse the order; the arrow rotates and icons
+tween into place. Reduced-motion preferences disable the animation. Search city
+names, states/provinces, countries, or icon subjects.
 Click a circle to expand it and enlarge its icon on the map. Click it again to collapse. Download individual PNGs or the whole pack.
 
 To my knowledge, there isn't an icon pack for North American cities that goes
@@ -62,3 +64,5 @@ Edit permission for the account. Pull requests only test and build.
 The existing evans.bike Worker forwards only `/naicons` and `/naicons/*` through
 a service binding named `NAICONS` to this worker. This project has no DNS routes
 or public workers.dev endpoint. It deploys independently of the personal site.
+
+Decorative contour lines are original synthetic vector artwork, not geographic elevation data.

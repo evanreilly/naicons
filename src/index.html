@@ -10,7 +10,7 @@
     />
     <meta name="theme-color" content="#f3e7d0" />
     <link rel="canonical" href="https://evans.bike/naicons" />
-    <link rel="icon" href="/naicons/favicon.svg" />
+    <link rel="icon" href="/naicons/icons/us-50-10675-burlington.png" />
     <link rel="stylesheet" href="/naicons/style.css" />
     <script type="module" src="/naicons/app.js"></script>
   </head>
@@ -35,7 +35,6 @@
               aria-label="Interactive city map. Drag to pan; use plus and minus to zoom, arrow keys to pan, Home to reset."
             >
               <g id="map-transform">
-                <g id="graticule"></g>
                 <g id="countries"></g>
                 <g id="city-points"></g>
               </g>
@@ -108,11 +107,23 @@
             <option value="US">United States</option>
             <option value="CA">Canada</option>
             <option value="MX">Mexico</option></select
-          ><label class="sr-only" for="sort">Sort by</label
-          ><select id="sort">
-            <option value="population-asc">Population ↑</option>
-            <option value="population-desc">Population ↓</option>
-            <option value="name">Name A–Z</option></select
+          ><button
+            id="sort"
+            type="button"
+            aria-label="Population: smallest first. Click for largest first."
+            aria-pressed="false"
+            title="Smallest first"
+          >
+            <span>Population</span
+            ><svg
+              class="sort-arrow"
+              viewBox="0 0 16 16"
+              width="14"
+              height="14"
+              aria-hidden="true"
+            >
+              <path d="M8 13V3M4 7l4-4 4 4" />
+            </svg></button
           ><span id="result-count" aria-live="polite">544 icons</span>
         </form>
         <ul id="icon-grid" class="icon-grid">

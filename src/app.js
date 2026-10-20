@@ -1,17 +1,18 @@
-import { geoConicEqualArea, geoPath, geoGraticule10 } from "d3-geo";
+import { geoConicEqualArea, geoPath } from "d3-geo";
 import { select } from "d3-selection";
 import { zoom, zoomIdentity } from "d3-zoom";
 import "d3-transition";
 import { feature } from "topojson-client";
 import cities from "../data/cities.json";
 import topology from "../data/north-america.topo.json";
-import { filterCities, card, countries, formatPopulation } from "./catalog.js";
+import { filterCities, countries, formatPopulation } from "./catalog.js";
 const $ = (id) => document.getElementById(id);
 const byId = new Map(cities.map((c) => [c.id, c]));
 const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
 let selected,
   visible = cities,
   country = "all",
+  descending = false,
   width = 800,
   height = 565,
   current = zoomIdentity;
@@ -27,10 +28,6 @@ const landPaths = select("#countries")
   .data(land.features)
   .join("path")
   .attr("class", "country-shape");
-const grid = select("#graticule")
-  .append("path")
-  .datum(geoGraticule10())
-  .attr("class", "graticule-path");
 const dots = select("#city-points")
   .selectAll("circle")
   .data(cities)
@@ -92,7 +89,6 @@ function resize() {
     land,
   );
   landPaths.attr("d", path);
-  grid.attr("d", path);
   dots
     .attr("cx", (c) => projection([c.longitude, c.latitude])[0])
     .attr("cy", (c) => projection([c.longitude, c.latitude])[1]);
@@ -146,13 +142,30 @@ function choose(
       block: "start",
     });
 }
-function update() {
+// Reuse the actual elements so their positions can tween across a new order.
+const iconNodes = new Map(
+  [...$("icon-grid").children].map((node) => [
+    node.querySelector("button").dataset.city,
+    node,
+  ]),
+);
+function update({ animate = false } = {}) {
+  const previous = new Map(
+    [...$("icon-grid").children].map((node) => [
+      node,
+      node.getBoundingClientRect(),
+    ]),
+  );
+  for (const node of iconNodes.values())
+    node.getAnimations().forEach((animation) => animation.cancel());
   visible = filterCities(cities, {
     query: $("search").value,
     country,
-    sort: $("sort").value,
+    sort: descending ? "population-desc" : "population-asc",
   });
-  $("icon-grid").innerHTML = visible.map(card).join("");
+  $("icon-grid").replaceChildren(
+    ...visible.map((city) => iconNodes.get(city.id)),
+  );
   $("empty-state").hidden = visible.length > 0;
   $("result-count").textContent =
     `${visible.length} ${visible.length === 1 ? "icon" : "icons"}`;
@@ -166,6 +179,34 @@ function update() {
       hash: false,
     },
   );
+  if (!reduced && animate) {
+    const moves = [...$("icon-grid").children].map((node) => ({
+      node,
+      before: previous.get(node),
+      after: node.getBoundingClientRect(),
+    }));
+    for (const { node, before, after } of moves) {
+      // Animate only elements entering or leaving the visible portion of the wall.
+      if (
+        (after.top > innerHeight || after.bottom < 0) &&
+        (!before || before.top > innerHeight || before.bottom < 0)
+      )
+        continue;
+      const x = before ? before.left - after.left : 0;
+      const y = before ? before.top - after.top : 12;
+      if (before && Math.abs(x) < 0.5 && Math.abs(y) < 0.5) continue;
+      node.animate(
+        [
+          {
+            transform: `translate(${x}px, ${y}px) scale(${before ? 1 : 0.88})`,
+            opacity: before ? 1 : 0,
+          },
+          { transform: "translate(0, 0) scale(1)", opacity: 1 },
+        ],
+        { duration: 650, easing: "cubic-bezier(.22, 1, .36, 1)" },
+      );
+    }
+  }
 }
 $("icon-grid").addEventListener("click", (event) => {
   const button = event.target.closest("[data-city]");
@@ -179,7 +220,16 @@ $("icon-grid").addEventListener("click", (event) => {
 });
 $("filters").addEventListener("submit", (event) => event.preventDefault());
 $("search").addEventListener("input", update);
-$("sort").addEventListener("change", update);
+$("sort").addEventListener("click", () => {
+  descending = !descending;
+  $("sort").setAttribute("aria-pressed", String(descending));
+  $("sort").setAttribute(
+    "aria-label",
+    `Population: ${descending ? "largest" : "smallest"} first. Click for ${descending ? "smallest" : "largest"} first.`,
+  );
+  $("sort").title = descending ? "Largest first" : "Smallest first";
+  update({ animate: true });
+});
 $("country").addEventListener("change", () => {
   country = $("country").value;
   update();

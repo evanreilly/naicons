@@ -34,7 +34,7 @@ await writeFile(
     filterCities(cities).map(card).join(""),
   ),
 );
-for (const file of ["style.css", "favicon.svg"])
+for (const file of ["style.css", "contours.svg"])
   await cp(`src/${file}`, `${out}/${file}`);
 for (const file of ["cities.json", "provenance.json"])
   await cp(`data/${file}`, `${out}/${file}`);
