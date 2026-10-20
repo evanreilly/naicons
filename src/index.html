@@ -3,119 +3,36 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>NA Icons — A little character for every city</title>
+    <title>North American city icons</title>
     <meta
       name="description"
-      content="544 illustrated city icons across the United States, Canada, and Mexico. Explore the map, find your city, and download the free AI-generated icon collection."
+      content="544 North American city icons. Search, explore the map, and download the collection."
     />
-    <meta name="theme-color" content="#f7f6f0" />
+    <meta name="theme-color" content="#f3e7d0" />
     <link rel="canonical" href="https://evans.bike/naicons" />
-    <link rel="icon" href="/naicons/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="/naicons/favicon.svg" />
     <link rel="stylesheet" href="/naicons/style.css" />
     <script type="module" src="/naicons/app.js"></script>
   </head>
   <body>
-    <a class="skip-link" href="#collection">Skip to the icons</a>
-    <header class="site-header">
-      <a class="wordmark" href="/naicons" aria-label="NA Icons home"
-        ><span class="brand-mark" aria-hidden="true">✳</span> NA<span
-          class="wordmark-light"
-          >ICONS</span
-        ><span class="edition">VOL. 01</span></a
-      >
-      <nav aria-label="Main">
-        <a href="/">By Evan Reilly</a
-        ><a class="repo-link" href="https://github.com/evanreilly/naicons"
-          >GitHub <span aria-hidden="true">↗</span></a
-        ><a class="pack-link" href="/naicons/naicons.zip" download
-          >Get the icon pack <span aria-hidden="true">↓</span></a
-        >
-      </nav>
-    </header>
+    <a class="skip-link" href="#collection">Skip to icons</a>
     <main>
-      <section class="intro" aria-labelledby="title">
-        <div>
-          <p class="eyebrow">
-            <span class="live-dot"></span> AN ATLAS OF NORTH AMERICAN CITY ICONS
-          </p>
-          <h1 id="title">Small cities.<br /><em>Big character.</em></h1>
-        </div>
-        <div class="intro-copy">
-          <p>
-            A little character for every place. From Burlington to Mexico City,
-            discover 544 city icons made for
-            <a href="https://traingame.io">TrainGame</a>—and yours to explore.
-          </p>
-          <div class="intro-facts">
-            <span><strong>544</strong> cities</span
-            ><span><strong>3</strong> countries</span
-            ><span><strong>1</strong> collection</span>
-          </div>
-        </div>
-      </section>
-      <section class="atlas" id="atlas" aria-labelledby="atlas-title">
-        <div class="section-line">
-          <h2 id="atlas-title"><span>01 /</span> Find your place</h2>
-          <p>Choose an icon below. See where it belongs.</p>
-        </div>
+      <header>
+        <a href="/" class="home-link">evans.bike</a>
+        <h1>NA city icons</h1>
+        <nav aria-label="Links">
+          <a href="https://github.com/evanreilly/naicons">GitHub ↗</a
+          ><a href="/naicons/naicons.zip" download>Download all ↓</a>
+        </nav>
+      </header>
+      <section id="atlas" aria-label="North American city map">
         <div class="atlas-frame">
-          <aside class="city-inspector" aria-live="polite" aria-atomic="true">
-            <div id="selection-content">
-              <div class="inspector-top">
-                <span class="eyebrow">ON THE MAP</span
-                ><span id="selected-country" class="country-label">US</span>
-              </div>
-              <div class="selected-art">
-                <img
-                  id="selected-image"
-                  src="/naicons/thumbs/us-50-10675.webp"
-                  alt="Burlington city icon"
-                  width="192"
-                  height="192"
-                />
-              </div>
-              <p id="selected-region" class="eyebrow">
-                VERMONT · UNITED STATES
-              </p>
-              <h3 id="selected-name">Burlington</h3>
-              <p id="selected-concept" class="selected-concept"></p>
-              <div class="population-row">
-                <strong id="selected-population">44,432</strong
-                ><span
-                  >people <small id="selected-year">2024 estimate</small></span
-                >
-              </div>
-              <p id="selected-exception" class="exception-note">
-                A small-city exception, included so Vermont has a place on the
-                map.
-              </p>
-              <a
-                id="download-icon"
-                class="download-icon"
-                href="/naicons/icons/us-50-10675-burlington.png"
-                download
-                >Download PNG <span aria-hidden="true">↓</span></a
-              >
-              <div class="inspector-links">
-                <a id="population-source" href="https://www.census.gov/"
-                  >Population source ↗</a
-                ><button id="copy-link" type="button">Copy city link</button>
-              </div>
-            </div>
-            <p id="selection-empty" hidden>
-              No matching cities. Try another search.
-            </p>
-          </aside>
           <div class="map-area">
-            <div class="map-kicker">
-              <span class="map-dot"></span> NORTH AMERICA
-              <span class="map-kicker-secondary">/ US · CA · MX</span>
-            </div>
             <svg
               id="map"
               tabindex="0"
               role="group"
-              aria-label="Interactive city map. Drag to pan. Use the zoom buttons or plus and minus keys. Arrow keys pan the map."
+              aria-label="Interactive city map. Drag to pan; use plus and minus to zoom, arrow keys to pan, Home to reset."
             >
               <g id="map-transform">
                 <g id="graticule"></g>
@@ -134,172 +51,105 @@
                 ></image>
                 <circle class="marker-dot" r="5"></circle>
                 <text id="marker-name" y="23" text-anchor="middle"></text>
-              </g>
-            </svg>
+              </g></svg
+            ><span class="map-label">US · CA · MX</span>
             <div class="map-controls" role="group" aria-label="Map controls">
-              <button
-                id="zoom-in"
-                aria-label="Zoom in"
-                title="Zoom in"
-                type="button"
-              >
-                +</button
-              ><button
-                id="zoom-out"
-                aria-label="Zoom out"
-                title="Zoom out"
-                type="button"
-              >
+              <button id="zoom-in" type="button" aria-label="Zoom in">+</button
+              ><button id="zoom-out" type="button" aria-label="Zoom out">
                 −</button
-              ><button
-                id="reset-map"
-                aria-label="Reset map"
-                title="Reset map"
-                type="button"
-              >
+              ><button id="reset-map" type="button" aria-label="Reset map">
                 ↺
               </button>
             </div>
-            <div class="map-footer">
-              <span id="map-caption">544 places, countless stories.</span
-              ><span class="map-instruction"
-                >Drag to explore · Ctrl + scroll to zoom</span
+            <span class="map-hint">Drag to pan · Ctrl + scroll to zoom</span>
+          </div>
+          <div
+            id="selection-content"
+            class="city-detail"
+            aria-live="polite"
+            hidden
+          >
+            <img id="selected-image" width="56" height="56" alt="" />
+            <div class="detail-name">
+              <h2 id="selected-name"></h2>
+              <p id="selected-region"></p>
+              <p>
+                <span id="selected-population"></span> people ·
+                <span id="selected-year"></span>
+              </p>
+            </div>
+            <div class="detail-links">
+              <a id="download-icon" download>PNG ↓</a
+              ><button id="copy-link" type="button">Copy link</button
+              ><a id="population-source">Source ↗</a
+              ><button
+                id="close-city"
+                type="button"
+                aria-label="Close city details"
               >
+                ×
+              </button>
             </div>
           </div>
         </div>
       </section>
-      <section
-        class="collection"
-        id="collection"
-        aria-labelledby="collection-title"
-      >
-        <div class="collection-heading">
-          <div>
-            <p class="eyebrow">02 / THE COLLECTION</p>
-            <h2 id="collection-title">A place for every icon.</h2>
-          </div>
-          <p>Start small. Find something unexpected.</p>
-        </div>
-        <form class="filter-bar" id="filters" role="search">
-          <div class="search-field">
-            <svg viewBox="0 0 24 24" aria-hidden="true">
-              <circle cx="10.5" cy="10.5" r="6.5"></circle>
-              <path d="m16 16 5 5"></path></svg
-            ><label class="sr-only" for="search"
-              >Search cities, states, provinces, or icon subjects</label
-            ><input
-              id="search"
-              type="search"
-              placeholder="A city, a state, a little curiosity…"
-              autocomplete="off"
-            /><span class="search-shortcut" aria-hidden="true">/</span>
-          </div>
-          <label class="sort-label" for="sort"
-            >Sort by
-            <select id="sort">
-              <option value="population-asc">Population: smallest first</option>
-              <option value="population-desc">Population: largest first</option>
-              <option value="name">City name: A–Z</option>
-            </select></label
-          >
+      <section id="collection" aria-label="City icon collection">
+        <form id="filters" role="search">
+          <label class="sr-only" for="search"
+            >Search cities, states, provinces, or icon subjects</label
+          ><input
+            id="search"
+            type="search"
+            placeholder="Search cities…"
+            autocomplete="off"
+          /><label class="sr-only" for="country">Country</label
+          ><select id="country">
+            <option value="all">All countries</option>
+            <option value="US">United States</option>
+            <option value="CA">Canada</option>
+            <option value="MX">Mexico</option></select
+          ><label class="sr-only" for="sort">Sort by</label
+          ><select id="sort">
+            <option value="population-asc">Population ↑</option>
+            <option value="population-desc">Population ↓</option>
+            <option value="name">Name A–Z</option></select
+          ><span id="result-count" aria-live="polite">544 icons</span>
         </form>
-        <div class="filter-summary">
-          <div
-            class="country-filters"
-            role="group"
-            aria-label="Filter by country"
-          >
-            <button type="button" data-country="all" aria-pressed="true">
-              All places <span>544</span></button
-            ><button type="button" data-country="US" aria-pressed="false">
-              United States <span>347</span></button
-            ><button type="button" data-country="CA" aria-pressed="false">
-              Canada <span>68</span></button
-            ><button type="button" data-country="MX" aria-pressed="false">
-              Mexico <span>129</span>
-            </button>
-          </div>
-          <p id="result-count" aria-live="polite">544 icons · smallest first</p>
-        </div>
-        <ul class="icon-grid" id="icon-grid">
+        <ul id="icon-grid" class="icon-grid">
           __CARDS__
         </ul>
-        <div class="empty-state" id="empty-state" hidden>
-          <span aria-hidden="true">⌕</span>
-          <h3>No places found.</h3>
-          <p>Try a city, state, province, country, or icon subject.</p>
+        <div id="empty-state" hidden>
+          <p>No cities found.</p>
           <button id="clear-filters" type="button">Clear filters</button>
         </div>
-        <noscript
-          ><p class="noscript-note">
-            All icons are listed above in population order. Enable JavaScript to
-            search and explore the interactive map, or
-            <a href="/naicons/naicons.zip">download the complete pack</a>.
-          </p></noscript
-        >
+        <noscript>Enable JavaScript to search and expand icons.</noscript>
       </section>
-      <section class="about" aria-labelledby="about-title">
-        <div>
-          <p class="eyebrow">03 / WHY THIS EXISTS</p>
-          <h2 id="about-title">More than the<br /><em>usual skylines.</em></h2>
-        </div>
-        <div class="about-copy">
+      <footer>
+        <details>
+          <summary>About these icons</summary>
           <p>
-            To my knowledge, there isn’t an icon pack for North American cities
-            that goes much beyond the megacities. So, for
-            <a href="https://traingame.io">TrainGame</a>, I made one.
+            To my knowledge, there isn’t an icon pack covering North American
+            cities beyond the megacities. This is the TrainGame collection: 544
+            cities across the US, Canada, and Mexico, covering the game’s cities
+            above 100k plus five smaller exceptions for states without a 100k
+            city: Burlington VT, Charleston WV, Cheyenne WY, Portland ME, and
+            Wilmington DE.
           </p>
           <p>
-            This collection covers every city above 100,000 people in the game’s
-            US, Canada, and Mexico inventory, plus five smaller cities to give
-            states without a 100k city a place on the map. Burlington, Vermont,
-            is one of them.
+            Population years: US 2024, Canada 2025, Mexico 2020. Geographic
+            definitions vary; these are not metro populations. Generated with
+            Nano Banana Pro.
+            <a href="https://creativecommons.org/publicdomain/zero/1.0/"
+              >CC0 for any rights I may hold</a
+            >; code MIT.
+            <a href="https://github.com/evanreilly/naicons"
+              >Sources and originals ↗</a
+            >
           </p>
-          <details>
-            <summary>
-              The small print, and the small cities <span>+</span>
-            </summary>
-            <div>
-              <p>
-                The five exceptions are Burlington, Vermont; Charleston, West
-                Virginia; Cheyenne, Wyoming; Portland, Maine; and Wilmington,
-                Delaware.
-              </p>
-              <p>
-                “North America” here means the United States, Canada, and
-                Mexico—not a claim to cover every country on the continent.
-                Populations come from the source inventory: US 2024 estimates,
-                Canadian 2025 estimates, and Mexico’s 2020 census. City
-                boundaries and definitions differ by country; these are not
-                metro-area rankings.
-              </p>
-              <p>
-                The artwork was generated with Nano Banana Pro and prepared as
-                transparent 1024 × 1024 PNGs. The icons carry a
-                <a href="https://creativecommons.org/publicdomain/zero/1.0/"
-                  >CC0 dedication</a
-                >
-                for any rights I may hold; this doesn’t assert exclusive
-                copyright in AI-generated artwork. The site code is
-                MIT-licensed. Full provenance and population sources are in the
-                <a href="https://github.com/evanreilly/naicons">repository</a>.
-              </p>
-            </div>
-          </details>
-        </div>
-      </section>
+        </details>
+        <span>544 icons</span>
+      </footer>
     </main>
-    <footer>
-      <a class="wordmark" href="/naicons"
-        ><span class="brand-mark" aria-hidden="true">✳</span> NA<span
-          class="wordmark-light"
-          >ICONS</span
-        ></a
-      >
-      <p>Made for a game. Shared for whatever comes next.</p>
-      <a href="/">evans.bike ↗</a>
-    </footer>
-    <div class="toast" id="toast" role="status" hidden></div>
+    <div id="toast" class="toast" role="status" hidden></div>
   </body>
 </html>

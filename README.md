@@ -5,7 +5,7 @@
 544 transparent, 1024 × 1024 city icons made for [TrainGame](https://traingame.io),
 with a searchable directory and interactive map. The default order is population,
 smallest first. Search city names, states/provinces, countries, or icon subjects.
-Click a card to enlarge its icon on the map. Download individual PNGs or the whole pack.
+Click a circle to expand it and enlarge its icon on the map. Click it again to collapse. Download individual PNGs or the whole pack.
 
 To my knowledge, there isn't an icon pack for North American cities that goes
 much beyond the megacities. This collection covers every city above 100,000 in

@@ -45,6 +45,9 @@ dots
   .append("title")
   .text((c) => `${c.name}, ${c.region} · ${formatPopulation(c.population)}`);
 function placeMarker() {
+  dots.attr("r", (c) =>
+    c.id === selected?.id ? 4 / current.k : 2.5 / current.k,
+  );
   if (!selected) return;
   const [x, y] = current.apply(
     projection([selected.longitude, selected.latitude]),
@@ -83,8 +86,8 @@ function resize() {
   svg.attr("viewBox", `0 0 ${width} ${height}`);
   projection.fitExtent(
     [
-      [22, 82],
-      [width - 22, height - 42],
+      [22, 30],
+      [width - 22, height - 35],
     ],
     land,
   );
@@ -107,34 +110,30 @@ function choose(
 ) {
   selected = city;
   $("selection-content").hidden = !city;
-  $("selection-empty").hidden = !!city;
   $("selection-marker").style.display = city ? "" : "none";
   document
     .querySelectorAll('.city-card[aria-pressed="true"]')
     .forEach((el) => el.setAttribute("aria-pressed", "false"));
   dots.classed("active", (c) => c.id === city?.id);
-  if (!city) return;
+  if (!city) {
+    placeMarker();
+    if (hash) history.replaceState(null, "", location.pathname);
+    return;
+  }
   const thumb = `/naicons/thumbs/${city.id}.webp`;
-  $("selected-country").textContent = city.country;
   $("selected-region").textContent =
     `${city.region} · ${countries[city.country]}`;
   $("selected-name").textContent = city.name;
-  $("selected-concept").textContent = city.concept;
   $("selected-image").src = thumb;
   $("selected-image").alt = `${city.name} city icon`;
   $("selected-population").textContent = formatPopulation(city.population);
   $("selected-year").textContent =
     `${city.populationYear} ${city.country === "MX" ? "census" : "estimate"}`;
-  $("selected-exception").hidden = !city.exception;
-  $("selected-exception").textContent =
-    `A small-city exception, included so ${city.region} has a place on the map.`;
   $("download-icon").href = `/naicons/icons/${city.filename}`;
   $("download-icon").download = city.filename;
   $("population-source").href = city.populationSource;
   $("marker-image").setAttribute("href", thumb);
   $("marker-name").textContent = city.name;
-  $("map-caption").textContent =
-    `${city.name}, ${city.region} · ${formatPopulation(city.population)} people`;
   document
     .querySelector(`[data-city="${city.id}"]`)
     ?.setAttribute("aria-pressed", "true");
@@ -155,46 +154,41 @@ function update() {
   });
   $("icon-grid").innerHTML = visible.map(card).join("");
   $("empty-state").hidden = visible.length > 0;
-  const order = {
-    "population-asc": "smallest first",
-    "population-desc": "largest first",
-    name: "A–Z",
-  }[$("sort").value];
   $("result-count").textContent =
-    `${visible.length} ${visible.length === 1 ? "icon" : "icons"} · ${order}`;
+    `${visible.length} ${visible.length === 1 ? "icon" : "icons"}`;
   const ids = new Set(visible.map((c) => c.id));
   dots
     .classed("dimmed", (c) => !ids.has(c.id))
     .style("pointer-events", (c) => (ids.has(c.id) ? null : "none"));
-  choose(visible.find((c) => c.id === selected?.id) || visible[0], {
-    hash: false,
-  });
+  choose(
+    visible.find((c) => c.id === selected?.id),
+    {
+      hash: false,
+    },
+  );
 }
 $("icon-grid").addEventListener("click", (event) => {
   const button = event.target.closest("[data-city]");
   if (button)
-    choose(byId.get(button.dataset.city), { fly: true, scroll: true });
+    choose(
+      selected?.id === button.dataset.city
+        ? undefined
+        : byId.get(button.dataset.city),
+      { fly: true, scroll: false },
+    );
 });
 $("filters").addEventListener("submit", (event) => event.preventDefault());
 $("search").addEventListener("input", update);
 $("sort").addEventListener("change", update);
-document.querySelectorAll("[data-country]").forEach((button) =>
-  button.addEventListener("click", () => {
-    country = button.dataset.country;
-    document
-      .querySelectorAll("[data-country]")
-      .forEach((b) => b.setAttribute("aria-pressed", String(b === button)));
-    update();
-  }),
-);
+$("country").addEventListener("change", () => {
+  country = $("country").value;
+  update();
+});
+$("close-city").addEventListener("click", () => choose(undefined));
 $("clear-filters").addEventListener("click", () => {
   $("search").value = "";
   country = "all";
-  document
-    .querySelectorAll("[data-country]")
-    .forEach((b) =>
-      b.setAttribute("aria-pressed", String(b.dataset.country === "all")),
-    );
+  $("country").value = "all";
   update();
   $("search").focus();
 });
@@ -262,9 +256,7 @@ function fromHash() {
   if (byId.has(id)) choose(byId.get(id), { fly: true, hash: false });
 }
 resize();
-choose(
-  byId.get(new URLSearchParams(location.hash.slice(1)).get("city")) ||
-    cities[0],
-  { hash: false },
-);
+choose(byId.get(new URLSearchParams(location.hash.slice(1)).get("city")), {
+  hash: false,
+});
 window.addEventListener("hashchange", fromHash);

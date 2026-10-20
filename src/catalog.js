@@ -37,5 +37,6 @@ export const escape = (value) =>
       ],
   );
 export function card(city) {
-  return `<li><button class="city-card" type="button" data-city="${city.id}" aria-label="Explore ${escape(city.name)}, ${escape(city.region)}; population ${formatPopulation(city.population)}" aria-pressed="false"><span class="card-top"><span>${city.country}</span>${city.exception ? '<span class="exception-dot" title="Below 100,000; included for state coverage">↳ Small-city exception</span>' : '<span class="card-arrow" aria-hidden="true">↗</span>'}</span><img src="/naicons/thumbs/${city.id}.webp" alt="" width="160" height="160" loading="lazy" decoding="async"><span class="card-name">${escape(city.name)}</span><span class="card-region">${escape(city.region)}</span><span class="card-population">${formatPopulation(city.population)} <span>people</span></span></button></li>`;
+  const label = `${city.name}, ${city.region} · ${formatPopulation(city.population)}`;
+  return `<li><button class="city-card" type="button" data-city="${city.id}" title="${escape(label)}" aria-label="Explore ${escape(label)}" aria-pressed="false"><span class="icon-orb"><img src="/naicons/thumbs/${city.id}.webp" alt="" width="64" height="64" loading="lazy" decoding="async"></span><span class="card-caption"><span class="card-name">${escape(city.name)}</span><span class="card-population">${formatPopulation(city.population)}</span></span></button></li>`;
 }
