@@ -1,0 +1,17 @@
+{
+  "source": "TrainGame North America city inventory",
+  "sourceCommit": "c650a7daa5613c0bea105ec294181bafa64b56de",
+  "generatedWith": "Nano Banana Pro (google/gemini-3-pro-image)",
+  "iconCount": 544,
+  "dimensions": [
+    1024,
+    1024
+  ],
+  "populationYears": {
+    "US": 2024,
+    "CA": 2025,
+    "MX": 2020
+  },
+  "mapSource": "Natural Earth via world-atlas countries-50m; simplified in TrainGame",
+  "exported": "2026-10-20"
+}

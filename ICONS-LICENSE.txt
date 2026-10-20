@@ -1,0 +1,16 @@
+NA Icons — AI-generated artwork
+
+These images were generated using Nano Banana Pro (google/gemini-3-pro-image).
+No assertion of exclusive copyright in the AI-generated artwork is made.
+
+To the extent Evan Reilly holds copyright or related rights in these icons,
+Evan Reilly dedicates those rights to the public domain under CC0 1.0 Universal:
+https://creativecommons.org/publicdomain/zero/1.0/
+Full legal text: https://creativecommons.org/publicdomain/zero/1.0/legalcode.en
+
+You may copy, modify, and use the icons, including commercially, without
+requesting permission or providing attribution. Attribution is appreciated.
+CC0 does not grant trademark, publicity, privacy, or other third-party rights.
+The artwork is provided without warranty.
+
+The directory code is licensed separately under the MIT license in LICENSE.
