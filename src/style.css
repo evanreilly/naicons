@@ -153,7 +153,7 @@ footer {
   opacity: 0.1;
 }
 .marker-pin {
-  fill: #fff6e5;
+  fill: #9b6745;
   stroke: #9b6745;
   stroke-width: 1.2;
   stroke-linejoin: round;
@@ -670,4 +670,8 @@ details p {
 
 .terrain-credits {
   margin-top: 12px;
+}
+
+.marker-center {
+  fill: #fff6e5;
 }
