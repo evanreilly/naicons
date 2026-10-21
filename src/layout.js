@@ -6,12 +6,16 @@ export function packIcons(
   const gutter = 8,
     step = cell + gap;
   const columns = Math.max(1, Math.floor((width - gutter * 2 + gap) / step));
+  // Share leftover width between columns instead of leaving it at the right edge.
+  const columnStep =
+    columns > 1 ? (width - gutter * 2 - cell) / (columns - 1) : 0;
+  const left = columns > 1 ? gutter : (width - cell) / 2;
   const positions = new Map();
   let reserved;
   if (ids.includes(selected)) {
     const index = ids.indexOf(selected);
     const center = anchor || {
-      x: gutter + (index % columns) * step + cell / 2,
+      x: left + (index % columns) * columnStep + cell / 2,
       y: gutter + Math.floor(index / columns) * step + cell / 2,
     };
     reserved = {
@@ -29,14 +33,14 @@ export function packIcons(
     let point;
     do {
       point = {
-        x: gutter + (slot % columns) * step,
+        x: left + (slot % columns) * columnStep,
         y: gutter + Math.floor(slot / columns) * step,
       };
       slot++;
     } while (
       reserved &&
-      point.x < reserved.x + reserved.width + gap &&
-      point.x + cell + gap > reserved.x &&
+      point.x < reserved.x + reserved.width + gap - 0.01 &&
+      point.x + cell + gap > reserved.x + 0.01 &&
       point.y < reserved.y + reserved.height + gap &&
       point.y + cell + gap > reserved.y
     );

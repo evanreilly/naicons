@@ -50,12 +50,24 @@ test("downward expansion leaves preceding icons and adjacent columns in place", 
     selected: "10",
     anchor: { x: point.x + 23, y: point.y + 23 },
   });
-  for (let i = 0; i < 16; i++)
-    assert.deepEqual(
-      {
-        x: after.positions.get(String(i)).x,
-        y: after.positions.get(String(i)).y,
-      },
-      before.positions.get(String(i)),
-    );
+  for (let i = 0; i < 16; i++) {
+    const actual = after.positions.get(String(i));
+    const original = before.positions.get(String(i));
+    assert.ok(Math.abs(actual.x - original.x) < 0.001);
+    assert.equal(actual.y, original.y);
+  }
 });
+
+for (const width of [292, 332, 347, 362, 402]) {
+  test(`mobile rows justify evenly with equal side margins at ${width}px`, () => {
+    const ids = Array.from({ length: 100 }, (_, i) => String(i));
+    const { positions } = packIcons(ids, { width, cell: 42, gap: 6 });
+    const row = [...positions.values()].filter((p) => p.y === 8);
+    assert.ok(Math.abs(row[0].x - (width - row.at(-1).x - 42)) < 0.001);
+    const step = row[1].x - row[0].x;
+    for (let i = 1; i < row.length; i++)
+      assert.ok(Math.abs(row[i].x - row[i - 1].x - step) < 0.001);
+    const nextRow = [...positions.values()].filter((p) => p.y === 56);
+    row.forEach((point, i) => assert.equal(nextRow[i].x, point.x));
+  });
+}
