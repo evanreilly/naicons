@@ -7,7 +7,13 @@ import cities from "../data/cities.json";
 import topology from "../data/north-america.topo.json";
 import terrain from "../data/terrain-contours.json";
 import { packIcons } from "./layout.js";
-import { filterCities, countries, formatPopulation } from "./catalog.js";
+import {
+  filterCities,
+  countries,
+  formatPopulation,
+  citySlug,
+  cityFromLink,
+} from "./catalog.js";
 const $ = (id) => document.getElementById(id);
 const byId = new Map(cities.map((c) => [c.id, c]));
 const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -170,7 +176,7 @@ function choose(
     .querySelector(`[data-city="${city.id}"]`)
     ?.setAttribute("aria-pressed", "true");
   if (layout) layoutIcons(previous, anchor, true);
-  if (hash) history.replaceState(null, "", `#city=${city.id}`);
+  if (hash) history.replaceState(null, "", `#city=${citySlug(city)}`);
   placeMarker();
   if (shouldFly) fly();
   if (scroll)
@@ -402,7 +408,7 @@ let toastTimer;
 $("copy-link").addEventListener("click", async () => {
   try {
     await navigator.clipboard.writeText(
-      `${location.origin}/naicons#city=${selected.id}`,
+      `${location.origin}/naicons#city=${citySlug(selected)}`,
     );
     $("toast").textContent = "City link copied";
   } catch {
@@ -413,12 +419,15 @@ $("copy-link").addEventListener("click", async () => {
   toastTimer = setTimeout(() => ($("toast").hidden = true), 3000);
 });
 function fromHash() {
-  const id = new URLSearchParams(location.hash.slice(1)).get("city");
-  if (byId.has(id)) choose(byId.get(id), { fly: true, hash: false });
+  const city = cityFromLink(
+    cities,
+    new URLSearchParams(location.hash.slice(1)).get("city"),
+  );
+  if (city) choose(city, { fly: true });
 }
 resize();
 layoutIcons();
-choose(byId.get(new URLSearchParams(location.hash.slice(1)).get("city")), {
-  hash: false,
-});
+choose(
+  cityFromLink(cities, new URLSearchParams(location.hash.slice(1)).get("city")),
+);
 window.addEventListener("hashchange", fromHash);

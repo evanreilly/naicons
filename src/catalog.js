@@ -40,3 +40,12 @@ export function card(city) {
   const label = `${city.name}, ${city.region} · ${formatPopulation(city.population)}`;
   return `<li><button class="city-card" type="button" data-city="${city.id}" title="${escape(label)}" aria-label="Explore ${escape(label)}" aria-pressed="false"><span class="icon-orb"><img src="/naicons/thumbs/${city.id}.webp" alt="" width="64" height="64" loading="lazy" decoding="async"></span><span class="card-caption"><span class="card-name">${escape(city.name)}</span><span class="card-population">${formatPopulation(city.population)}</span></span></button></li>`;
 }
+
+// Include the region and country so cities with the same name have distinct links.
+export const citySlug = (city) =>
+  normalize(`${city.name}-${city.region}-${city.country}`)
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-|-$/g, "");
+export function cityFromLink(cities, value) {
+  return cities.find((city) => citySlug(city) === value || city.id === value);
+}

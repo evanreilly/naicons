@@ -1,7 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { readFile, stat } from "node:fs/promises";
-import { filterCities, card } from "../src/catalog.js";
+import { filterCities, card, citySlug, cityFromLink } from "../src/catalog.js";
 import worker from "../src/worker.js";
 const cities = JSON.parse(
   await readFile(new URL("../data/cities.json", import.meta.url)),
@@ -122,4 +122,18 @@ test("terrain contours contain real western mountain elevations in geographic co
         assert.ok(Number.isFinite(lat) && lat >= 0 && lat <= 86);
       }
   }
+});
+
+test("city permalinks are readable, unique, and compatible with old city codes", () => {
+  assert.equal(new Set(cities.map(citySlug)).size, cities.length);
+  assert.equal(
+    citySlug(cities.find((c) => c.id === "us-08-20000")),
+    "denver-colorado-us",
+  );
+  for (const city of cities) {
+    assert.match(citySlug(city), /^[a-z0-9]+(?:-[a-z0-9]+)*$/);
+    assert.equal(cityFromLink(cities, citySlug(city)), city);
+    assert.equal(cityFromLink(cities, city.id), city);
+  }
+  assert.equal(cityFromLink(cities, "unknown-city"), undefined);
 });
