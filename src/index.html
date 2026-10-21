@@ -36,19 +36,25 @@
             >
               <g id="map-transform">
                 <g id="countries"></g>
+                <g
+                  id="terrain"
+                  clip-path="url(#terrain-land-clip)"
+                  pointer-events="none"
+                ></g>
                 <g id="city-points"></g>
               </g>
               <g id="selection-marker" pointer-events="none">
-                <path class="marker-stem" d="M0,-14V0"></path>
-                <circle class="marker-halo" cx="0" cy="-60" r="47"></circle>
+                <path
+                  class="marker-pin"
+                  d="M0 0C-10-18-47-34-47-61a47 47 0 1 1 94 0C47-34 10-18 0 0Z"
+                ></path>
                 <image
                   id="marker-image"
-                  x="-42"
-                  y="-102"
-                  width="84"
-                  height="84"
+                  x="-39"
+                  y="-100"
+                  width="78"
+                  height="78"
                 ></image>
-                <circle class="marker-dot" r="5"></circle>
                 <text id="marker-name" y="23" text-anchor="middle"></text>
               </g></svg
             ><span class="map-label">US · CA · MX</span>
@@ -101,12 +107,22 @@
             type="search"
             placeholder="Search cities…"
             autocomplete="off"
-          /><label class="sr-only" for="country">Country</label
-          ><select id="country">
-            <option value="all">All countries</option>
-            <option value="US">United States</option>
-            <option value="CA">Canada</option>
-            <option value="MX">Mexico</option></select
+          /><button
+            id="country"
+            type="button"
+            aria-label="Country: All countries. Click for United States."
+            title="Next: United States"
+          >
+            <span id="country-name">All countries</span
+            ><svg
+              class="country-arrow"
+              viewBox="0 0 16 16"
+              width="14"
+              height="14"
+              aria-hidden="true"
+            >
+              <path d="M3 8h10M9 4l4 4-4 4" />
+            </svg></button
           ><button
             id="sort"
             type="button"
@@ -156,6 +172,24 @@
                 >Sources and originals ↗</a
               >
             </p>
+            <details class="terrain-credits">
+              <summary>Terrain sources</summary>
+              <p>
+                Contours derived from
+                <a href="https://registry.opendata.aws/terrain-tiles/"
+                  >Mapzen Terrain Tiles</a
+                >, smoothed and simplified for display; clipped to US, Canada,
+                and Mexico. Elevation data: USGS 3DEP, GMTED2010 and SRTM;
+                DOC/NOAA/NESDIS/NCEI; Canada (Open Government Licence); INEGI,
+                Continental relief, 2016. ArcticDEM data were created from
+                DigitalGlobe imagery with NSF funding (awards 1043681, 1559691,
+                1542736).
+                <a
+                  href="https://github.com/tilezen/joerd/blob/master/docs/attribution.md"
+                  >Full source attribution and licenses</a
+                >.
+              </p>
+            </details>
           </details>
           <span>544 icons</span>
         </footer>

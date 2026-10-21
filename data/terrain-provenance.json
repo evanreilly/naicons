@@ -1,0 +1,19 @@
+{
+  "source": "Mapzen Terrain Tiles on AWS",
+  "sourceURL": "https://registry.opendata.aws/terrain-tiles/",
+  "tileURL": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/{z}/{x}/{y}.png",
+  "zoom": 5,
+  "tiles": {
+    "x": [
+      0,
+      11
+    ],
+    "y": [
+      0,
+      15
+    ]
+  },
+  "processing": "Terrarium RGB decoded to metres; Gaussian sigma 2.5 source pixels; 2x downsample; 100m, 250m, then 250m intervals; short contours omitted; simplified to 0.65 downsampled pixels. Render clipped to US, Canada, Mexico land geometry.",
+  "accessed": "2026-10-20",
+  "attributionURL": "https://github.com/tilezen/joerd/blob/master/docs/attribution.md"
+}

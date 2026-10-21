@@ -92,3 +92,34 @@ test("worker only serves its own route and preserves asset status", async () => 
   assert.equal(response.headers.get("Content-Type"), "image/png");
   assert.equal(await response.text(), "image");
 });
+
+test("terrain contours contain real western mountain elevations in geographic coordinates", async () => {
+  const terrain = JSON.parse(
+    await readFile(new URL("../data/terrain-contours.json", import.meta.url)),
+  );
+  const high = terrain.features
+    .filter((f) => f.properties.elevation >= 2000)
+    .flatMap((f) => f.geometry.coordinates.flat());
+  assert.ok(
+    high.some(([lon, lat]) => lon > -110 && lon < -104 && lat > 36 && lat < 42),
+    "Rocky Mountain contours",
+  );
+  assert.ok(
+    high.some(([lon, lat]) => lon > -108 && lon < -96 && lat > 17 && lat < 25),
+    "Mexican highland contours",
+  );
+  assert.equal(
+    high.filter(([lon, lat]) => lon > -98 && lon < -90 && lat > 35 && lat < 45)
+      .length,
+    0,
+    "no invented 2000m mountains in the central plains",
+  );
+  for (const feature of terrain.features) {
+    assert.equal(feature.geometry.type, "MultiLineString");
+    for (const line of feature.geometry.coordinates)
+      for (const [lon, lat] of line) {
+        assert.ok(Number.isFinite(lon) && lon >= -180 && lon <= -45);
+        assert.ok(Number.isFinite(lat) && lat >= 0 && lat <= 86);
+      }
+  }
+});

@@ -5,6 +5,7 @@ import "d3-transition";
 import { feature } from "topojson-client";
 import cities from "../data/cities.json";
 import topology from "../data/north-america.topo.json";
+import terrain from "../data/terrain-contours.json";
 import { filterCities, countries, formatPopulation } from "./catalog.js";
 const $ = (id) => document.getElementById(id);
 const byId = new Map(cities.map((c) => [c.id, c]));
@@ -28,6 +29,20 @@ const landPaths = select("#countries")
   .data(land.features)
   .join("path")
   .attr("class", "country-shape");
+const landClip = svg
+  .append("defs")
+  .append("clipPath")
+  .attr("id", "terrain-land-clip")
+  .attr("clipPathUnits", "userSpaceOnUse")
+  .selectAll("path")
+  .data(land.features)
+  .join("path");
+const contourPaths = select("#terrain")
+  .selectAll("path")
+  .data(terrain.features)
+  .join("path")
+  .attr("class", "terrain-contour")
+  .classed("index-contour", (d) => d.properties.elevation % 1000 === 0);
 const dots = select("#city-points")
   .selectAll("circle")
   .data(cities)
@@ -94,6 +109,8 @@ function resize() {
     land,
   );
   landPaths.attr("d", path);
+  landClip.attr("d", path);
+  contourPaths.attr("d", path);
   dots
     .attr("cx", (c) => projection([c.longitude, c.latitude])[0])
     .attr("cy", (c) => projection([c.longitude, c.latitude])[1]);
@@ -243,15 +260,34 @@ $("sort").addEventListener("click", () => {
   $("sort").title = descending ? "Largest first" : "Smallest first";
   update({ animate: true });
 });
-$("country").addEventListener("change", () => {
-  country = $("country").value;
-  update();
+const countryCycle = ["all", "US", "CA", "MX"];
+let countryTurns = 0;
+function updateCountryButton() {
+  const index = countryCycle.indexOf(country);
+  const name = country === "all" ? "All countries" : countries[country];
+  const next = countryCycle[(index + 1) % countryCycle.length];
+  const nextName = next === "all" ? "All countries" : countries[next];
+  $("country-name").textContent = name;
+  $("country").setAttribute(
+    "aria-label",
+    `Country: ${name}. Click for ${nextName}.`,
+  );
+  $("country").title = `Next: ${nextName}`;
+  $("country").querySelector("svg").style.transform =
+    `rotate(${countryTurns * 360}deg)`;
+}
+$("country").addEventListener("click", () => {
+  country =
+    countryCycle[(countryCycle.indexOf(country) + 1) % countryCycle.length];
+  countryTurns += 1;
+  updateCountryButton();
+  update({ animate: true });
 });
 $("close-city").addEventListener("click", () => choose(undefined));
 $("clear-filters").addEventListener("click", () => {
   $("search").value = "";
   country = "all";
-  $("country").value = "all";
+  updateCountryButton();
   update();
   $("search").focus();
 });

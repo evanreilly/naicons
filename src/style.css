@@ -11,9 +11,7 @@
 body {
   margin: 0;
   background-color: var(--paper);
-  background-image:
-    url("/naicons/contours.svg"),
-    url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.82' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Cpath fill='%2379694b' opacity='.045' filter='url(%23n)' d='M0 0h180v180H0z'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.82' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Cpath fill='%2379694b' opacity='.045' filter='url(%23n)' d='M0 0h180v180H0z'/%3E%3C/svg%3E");
   background-size:
     1400px 900px,
     180px 180px;
@@ -154,20 +152,15 @@ footer {
 .city-point.dimmed {
   opacity: 0.1;
 }
-.marker-halo {
+.marker-pin {
   fill: #fff6e5;
-  stroke: #ac7251;
-  stroke-width: 1;
-  filter: drop-shadow(0 3px 6px #67503122);
+  stroke: #9b6745;
+  stroke-width: 1.2;
+  stroke-linejoin: round;
+  filter: drop-shadow(0 3px 6px #67503126);
 }
-.marker-stem {
-  stroke: var(--accent);
-  stroke-width: 1.5;
-}
-.marker-dot {
-  fill: var(--accent);
-  stroke: #fff6e5;
-  stroke-width: 2;
+.city-point.active {
+  opacity: 0;
 }
 #marker-name {
   fill: var(--ink);
@@ -592,7 +585,8 @@ details p {
   }
 }
 
-#sort {
+#sort,
+#country {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -605,11 +599,13 @@ details p {
   font-size: 12px;
   white-space: nowrap;
 }
-#sort:hover {
+#sort:hover,
+#country:hover {
   background: #eedbc0;
   border-color: #af815a;
 }
-.sort-arrow {
+.sort-arrow,
+.country-arrow {
   fill: none;
   stroke: currentColor;
   stroke-width: 1.6;
@@ -634,14 +630,16 @@ details p {
   filter: invert(0.22) sepia(1) saturate(0.7);
 }
 @media (max-width: 700px) {
-  #sort {
+  #sort,
+  #country {
     height: 32px;
     font-size: 11px;
     padding: 0 9px;
   }
 }
 @media (prefers-reduced-motion: reduce) {
-  .sort-arrow {
+  .sort-arrow,
+  .country-arrow {
     transition: none;
   }
 }
@@ -649,4 +647,29 @@ details p {
 #collection.scrolled #filters {
   background: var(--paper);
   box-shadow: 0 8px 12px var(--paper);
+}
+
+.terrain-contour {
+  fill: none;
+  stroke: #9b704c;
+  stroke-opacity: 0.35;
+  stroke-width: 0.55;
+  vector-effect: non-scaling-stroke;
+}
+.terrain-contour.index-contour {
+  stroke-opacity: 0.45;
+  stroke-width: 0.75;
+}
+#country {
+  min-width: 124px;
+  justify-content: space-between;
+}
+#search:focus,
+#search:focus-visible {
+  outline: none;
+  box-shadow: none;
+}
+
+.terrain-credits {
+  margin-top: 12px;
 }

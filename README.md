@@ -65,7 +65,16 @@ The existing evans.bike Worker forwards only `/naicons` and `/naicons/*` through
 a service binding named `NAICONS` to this worker. This project has no DNS routes
 or public workers.dev endpoint. It deploys independently of the personal site.
 
-Decorative contour lines are original synthetic vector artwork, not geographic elevation data.
+Terrain contours come from real [Mapzen Terrain Tiles](https://registry.opendata.aws/terrain-tiles/)
+elevation data. They are smoothed, simplified, and clipped to the US, Canada,
+and Mexico for illustration. They move and zoom with the map; no decorative
+contours are drawn in the ocean or on the page background. Source metadata is
+in `data/terrain-provenance.json`; attribution is in `THIRD_PARTY.md`.
+
+The optional `scripts/generate-terrain.py` authoring script rebuilds the committed
+GeoJSON (Python: numpy, scipy, contourpy, Pillow). Normal builds need no elevation
+API or Python installation. Country filtering cycles All → US → Canada → Mexico
+with the same tween as population sorting. Selected cities use a teardrop pin.
 
 The map fills the viewport behind the collection. The icon sheet scrolls in the
 lower half, while selected cities stay visible in the exposed map above it.
