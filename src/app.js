@@ -93,11 +93,11 @@ function move(transform) {
 function fly() {
   if (!selected) return;
   const [x, y] = projection([selected.longitude, selected.latitude]);
-  const k = Math.max(1.8, current.k);
+  const k = Math.max(2.2, current.k);
   move(
     zoomIdentity
       .translate(
-        width * (width < 700 ? 0.7 : 0.6) - k * x,
+        width * 0.5 - k * x,
         height * 0.29 - k * y,
       )
       .scale(k),
