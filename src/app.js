@@ -410,19 +410,20 @@ document.addEventListener("keydown", (event) => {
     $("search").focus();
   }
 });
-let toastTimer;
+let copyFeedbackTimer;
 $("copy-link").addEventListener("click", async () => {
   try {
     await navigator.clipboard.writeText(
       `${location.origin}/naicons#city=${citySlug(selected, cities)}`,
     );
-    $("toast").textContent = "City link copied";
+    $("copy-link").textContent = "Copied!";
   } catch {
-    $("toast").textContent = "Copy the city link from your address bar";
+    $("copy-link").textContent = "Copy from address bar";
   }
-  $("toast").hidden = false;
-  clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => ($("toast").hidden = true), 3000);
+  clearTimeout(copyFeedbackTimer);
+  copyFeedbackTimer = setTimeout(() => {
+    $("copy-link").textContent = "Copy link";
+  }, 3000);
 });
 function fromHash() {
   const city = cityFromLink(

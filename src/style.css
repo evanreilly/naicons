@@ -441,17 +441,6 @@ details p {
   font-size: 12px;
   line-height: 1.7;
 }
-.toast {
-  position: fixed;
-  bottom: 20px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: var(--ink);
-  color: #fff5e1;
-  padding: 9px 16px;
-  border-radius: 4px;
-  font-size: 12px;
-}
 .sr-only,
 .skip-link:not(:focus) {
   position: absolute;
