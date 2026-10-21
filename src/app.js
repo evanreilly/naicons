@@ -147,7 +147,7 @@ function choose(
     .forEach((el) => el.setAttribute("aria-pressed", "false"));
   dots.classed("active", (c) => c.id === city?.id);
   if (!city) {
-    if (layout) layoutIcons(previous);
+    if (layout) layoutIcons(previous, null, true);
     placeMarker();
     if (hash) history.replaceState(null, "", location.pathname);
     return;
@@ -169,7 +169,7 @@ function choose(
   document
     .querySelector(`[data-city="${city.id}"]`)
     ?.setAttribute("aria-pressed", "true");
-  if (layout) layoutIcons(previous, anchor);
+  if (layout) layoutIcons(previous, anchor, true);
   if (hash) history.replaceState(null, "", `#city=${city.id}`);
   placeMarker();
   if (shouldFly) fly();
@@ -194,8 +194,10 @@ function captureIcons() {
     ]),
   );
 }
-function layoutIcons(previous, anchor) {
+function layoutIcons(previous, anchor, preserveScroll = false) {
   const grid = $("icon-grid");
+  const scrollTop = $("collection").scrollTop;
+  const previousHeight = grid.offsetHeight;
   const mobile = matchMedia("(max-width: 700px)").matches;
   const cell = mobile ? 42 : 46,
     gap = mobile ? 6 : 7;
@@ -220,12 +222,18 @@ function layoutIcons(previous, anchor) {
     },
   );
   grid.classList.add("packed");
-  grid.style.height = `${packed.height}px`;
+  grid.style.height = `${preserveScroll ? Math.max(previousHeight, packed.height) : packed.height}px`;
   for (const city of visible) {
     const node = iconNodes.get(city.id),
       point = packed.positions.get(city.id);
     node.style.left = `${point.x}px`;
     node.style.top = `${point.y}px`;
+  }
+  if (preserveScroll) {
+    $("collection").scrollTop = scrollTop;
+    requestAnimationFrame(() => {
+      $("collection").scrollTop = scrollTop;
+    });
   }
   if (!previous || reduced) return;
   const moves = [...grid.children].map((node) => ({
