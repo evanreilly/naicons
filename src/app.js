@@ -105,6 +105,16 @@ function fly() {
   move(zoomIdentity.translate(targetX - k * x, targetY - k * y).scale(k));
 }
 function overviewTransform() {
+  if (width > 700) {
+    const [[, top]] = path.bounds(land);
+    const [mainlandCenter] = projection([-96, 45]);
+    const mapTop = $("map").getBoundingClientRect().top;
+    // Balance the mainland over the sheet and leave a small margin above the land.
+    return zoomIdentity.translate(
+      width / 2 - mainlandCenter,
+      24 - mapTop - top,
+    );
+  }
   const [x, y] = projection([-100, 45]);
   const k = 1.45;
   return zoomIdentity
