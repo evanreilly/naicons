@@ -257,6 +257,7 @@ footer {
   overflow: hidden;
 }
 #icon-scroll {
+  padding-top: 24px;
   flex: 1;
   min-height: 0;
   overflow-y: auto;
