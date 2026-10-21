@@ -207,7 +207,6 @@ function layoutIcons(previous, anchor, preserveScroll = false) {
   const button = active?.querySelector("button");
   const cardWidth = button?.offsetWidth || 0,
     cardHeight = button?.offsetHeight || 0;
-  const orbSize = mobile ? 70 : 84;
   const packed = packIcons(
     visible.map((c) => c.id),
     {
@@ -218,7 +217,6 @@ function layoutIcons(previous, anchor, preserveScroll = false) {
       anchor,
       cardWidth,
       cardHeight,
-      orbSize,
     },
   );
   grid.classList.add("packed");

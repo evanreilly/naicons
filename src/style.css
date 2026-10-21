@@ -154,8 +154,8 @@ footer {
 }
 .marker-pin {
   fill: #9b6745;
-  stroke: #9b6745;
-  stroke-width: 1.2;
+  stroke: #000;
+  stroke-width: 2;
   stroke-linejoin: round;
   filter: drop-shadow(0 3px 6px #67503126);
 }
@@ -673,6 +673,8 @@ details p {
 }
 
 .marker-center {
+  stroke: #000;
+  stroke-width: 1.5;
   fill: #fff6e5;
 }
 
@@ -690,4 +692,41 @@ details p {
 }
 .city-card[aria-pressed="true"] .icon-orb {
   transform: none;
+}
+
+/* Reveal the caption downward within one column; keep the artwork anchored. */
+.city-card[aria-pressed="true"] {
+  width: 46px;
+  padding: 0 0 4px;
+}
+.city-card[aria-pressed="true"] .icon-orb {
+  width: 46px;
+  height: 46px;
+  flex-shrink: 0;
+}
+.city-card[aria-pressed="true"] .icon-orb img {
+  width: 62px;
+  height: 62px;
+}
+.city-card[aria-pressed="true"] .card-caption {
+  padding: 5px 1px 0;
+}
+.card-name {
+  font-size: 9px;
+}
+.card-population {
+  font-size: 8px;
+}
+@media (max-width: 700px) {
+  .city-card[aria-pressed="true"],
+  .city-card[aria-pressed="true"] .icon-orb {
+    width: 42px;
+  }
+  .city-card[aria-pressed="true"] .icon-orb {
+    height: 42px;
+  }
+  .city-card[aria-pressed="true"] .icon-orb img {
+    width: 57px;
+    height: 57px;
+  }
 }

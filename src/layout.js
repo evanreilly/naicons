@@ -1,9 +1,9 @@
-// Pack around the selected artwork's center, not around its position in the order.
+// Keep the selected circle in place and reserve only the space below it.
 export function packIcons(
   ids,
-  { width, cell, gap, selected, anchor, cardWidth, cardHeight, orbSize },
+  { width, cell, gap, selected, anchor, cardWidth, cardHeight },
 ) {
-  const gutter = 28,
+  const gutter = 8,
     step = cell + gap;
   const columns = Math.max(1, Math.floor((width - gutter * 2 + gap) / step));
   const positions = new Map();
@@ -16,7 +16,7 @@ export function packIcons(
     };
     reserved = {
       x: center.x - cardWidth / 2,
-      y: center.y - orbSize / 2 - 4,
+      y: center.y - cell / 2,
       width: cardWidth,
       height: cardHeight,
     };
