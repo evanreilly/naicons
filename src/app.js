@@ -95,13 +95,15 @@ function fly() {
   const [x, y] = projection([selected.longitude, selected.latitude]);
   const k = Math.max(2.2, current.k);
   move(
-    zoomIdentity
-      .translate(
-        width * 0.5 - k * x,
-        height * 0.29 - k * y,
-      )
-      .scale(k),
+    zoomIdentity.translate(width * 0.5 - k * x, height * 0.29 - k * y).scale(k),
   );
+}
+function overviewTransform() {
+  const [x, y] = projection([-100, 45]);
+  const k = 1.65;
+  return zoomIdentity
+    .translate(width * 0.5 - k * x, height * 0.48 - k * y)
+    .scale(k);
 }
 function resize() {
   const box = $("map").getBoundingClientRect();
@@ -125,7 +127,7 @@ function resize() {
     [0, 0],
     [width, height],
   ]);
-  svg.call(behavior.transform, zoomIdentity);
+  svg.call(behavior.transform, overviewTransform());
   if (selected) fly();
   else placeMarker();
 }
@@ -169,7 +171,6 @@ function choose(
     `${city.populationYear} ${city.country === "MX" ? "census" : "estimate"}`;
   $("download-icon").href = `/naicons/icons/${city.filename}`;
   $("download-icon").download = city.filename;
-  $("population-source").href = city.populationSource;
   $("marker-image").setAttribute("href", thumb);
   $("marker-name").textContent = city.name;
   document
@@ -366,7 +367,7 @@ function scale(factor) {
 }
 $("zoom-in").addEventListener("click", () => scale(1.5));
 $("zoom-out").addEventListener("click", () => scale(1 / 1.5));
-$("reset-map").addEventListener("click", () => move(zoomIdentity));
+$("reset-map").addEventListener("click", () => move(overviewTransform()));
 $("map").addEventListener("keydown", (event) => {
   if (
     [
@@ -383,7 +384,7 @@ $("map").addEventListener("keydown", (event) => {
     event.preventDefault();
     if (event.key === "+" || event.key === "=") scale(1.5);
     else if (event.key === "-") scale(1 / 1.5);
-    else if (event.key === "Home") move(zoomIdentity);
+    else if (event.key === "Home") move(overviewTransform());
     else {
       const [x, y] = {
         ArrowLeft: [50, 0],
