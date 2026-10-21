@@ -675,3 +675,19 @@ details p {
 .marker-center {
   fill: #fff6e5;
 }
+
+/* Leave room for a circle to expand around its original center, even at edges. */
+.icon-grid.packed {
+  display: block;
+  position: relative;
+  overflow: visible;
+}
+.icon-grid.packed > li {
+  position: absolute;
+}
+#collection {
+  overflow-anchor: none;
+}
+.city-card[aria-pressed="true"] .icon-orb {
+  transform: none;
+}

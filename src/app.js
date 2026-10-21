@@ -6,6 +6,7 @@ import { feature } from "topojson-client";
 import cities from "../data/cities.json";
 import topology from "../data/north-america.topo.json";
 import terrain from "../data/terrain-contours.json";
+import { packIcons } from "./layout.js";
 import { filterCities, countries, formatPopulation } from "./catalog.js";
 const $ = (id) => document.getElementById(id);
 const byId = new Map(cities.map((c) => [c.id, c]));
@@ -125,8 +126,19 @@ function resize() {
 new ResizeObserver(resize).observe($("map"));
 function choose(
   city,
-  { fly: shouldFly = false, scroll = false, hash = true } = {},
+  { fly: shouldFly = false, scroll = false, hash = true, layout = true } = {},
 ) {
+  const previous = layout ? captureIcons() : null;
+  const gridBox = $("icon-grid").getBoundingClientRect();
+  const orb =
+    city &&
+    iconNodes.get(city.id)?.querySelector(".icon-orb").getBoundingClientRect();
+  const anchor = orb
+    ? {
+        x: orb.left + orb.width / 2 - gridBox.left,
+        y: orb.top + orb.height / 2 - gridBox.top,
+      }
+    : null;
   selected = city;
   $("selection-content").hidden = !city;
   $("selection-marker").style.display = city ? "" : "none";
@@ -135,6 +147,7 @@ function choose(
     .forEach((el) => el.setAttribute("aria-pressed", "false"));
   dots.classed("active", (c) => c.id === city?.id);
   if (!city) {
+    if (layout) layoutIcons(previous);
     placeMarker();
     if (hash) history.replaceState(null, "", location.pathname);
     return;
@@ -156,6 +169,7 @@ function choose(
   document
     .querySelector(`[data-city="${city.id}"]`)
     ?.setAttribute("aria-pressed", "true");
+  if (layout) layoutIcons(previous, anchor);
   if (hash) history.replaceState(null, "", `#city=${city.id}`);
   placeMarker();
   if (shouldFly) fly();
@@ -172,6 +186,78 @@ const iconNodes = new Map(
     node,
   ]),
 );
+function captureIcons() {
+  return new Map(
+    [...$("icon-grid").children].map((node) => [
+      node,
+      node.getBoundingClientRect(),
+    ]),
+  );
+}
+function layoutIcons(previous, anchor) {
+  const grid = $("icon-grid");
+  const mobile = matchMedia("(max-width: 700px)").matches;
+  const cell = mobile ? 42 : 46,
+    gap = mobile ? 6 : 7;
+  const active = selected && iconNodes.get(selected.id);
+  for (const node of iconNodes.values())
+    node.getAnimations().forEach((a) => a.cancel());
+  const button = active?.querySelector("button");
+  const cardWidth = button?.offsetWidth || 0,
+    cardHeight = button?.offsetHeight || 0;
+  const orbSize = mobile ? 70 : 84;
+  const packed = packIcons(
+    visible.map((c) => c.id),
+    {
+      width: grid.clientWidth,
+      cell,
+      gap,
+      selected: selected?.id,
+      anchor,
+      cardWidth,
+      cardHeight,
+      orbSize,
+    },
+  );
+  grid.classList.add("packed");
+  grid.style.height = `${packed.height}px`;
+  for (const city of visible) {
+    const node = iconNodes.get(city.id),
+      point = packed.positions.get(city.id);
+    node.style.left = `${point.x}px`;
+    node.style.top = `${point.y}px`;
+  }
+  if (!previous || reduced) return;
+  const moves = [...grid.children].map((node) => ({
+    node,
+    before: previous.get(node),
+    after: node.getBoundingClientRect(),
+  }));
+  for (const { node, before, after } of moves) {
+    if (
+      (node === active && anchor) ||
+      ((after.top > innerHeight || after.bottom < 0) &&
+        (!before || before.top > innerHeight || before.bottom < 0))
+    )
+      continue;
+    const x = before ? before.left - after.left : 0,
+      y = before ? before.top - after.top : 12;
+    if (before && Math.abs(x) < 0.5 && Math.abs(y) < 0.5) continue;
+    node.animate(
+      [
+        { transform: `translate(${x}px, ${y}px)`, opacity: before ? 1 : 0 },
+        { transform: "translate(0, 0)", opacity: 1 },
+      ],
+      { duration: 650, easing: "cubic-bezier(.22, 1, .36, 1)" },
+    );
+  }
+}
+let gridWidth = 0;
+new ResizeObserver(([entry]) => {
+  if (entry.contentRect.width === gridWidth) return;
+  gridWidth = entry.contentRect.width;
+  layoutIcons();
+}).observe($("icon-grid"));
 function update({ animate = false } = {}) {
   const previous = new Map(
     [...$("icon-grid").children].map((node) => [
@@ -200,36 +286,10 @@ function update({ animate = false } = {}) {
     visible.find((c) => c.id === selected?.id),
     {
       hash: false,
+      layout: false,
     },
   );
-  if (!reduced && animate) {
-    const moves = [...$("icon-grid").children].map((node) => ({
-      node,
-      before: previous.get(node),
-      after: node.getBoundingClientRect(),
-    }));
-    for (const { node, before, after } of moves) {
-      // Animate only elements entering or leaving the visible portion of the wall.
-      if (
-        (after.top > innerHeight || after.bottom < 0) &&
-        (!before || before.top > innerHeight || before.bottom < 0)
-      )
-        continue;
-      const x = before ? before.left - after.left : 0;
-      const y = before ? before.top - after.top : 12;
-      if (before && Math.abs(x) < 0.5 && Math.abs(y) < 0.5) continue;
-      node.animate(
-        [
-          {
-            transform: `translate(${x}px, ${y}px) scale(${before ? 1 : 0.88})`,
-            opacity: before ? 1 : 0,
-          },
-          { transform: "translate(0, 0) scale(1)", opacity: 1 },
-        ],
-        { duration: 650, easing: "cubic-bezier(.22, 1, .36, 1)" },
-      );
-    }
-  }
+  layoutIcons(animate ? previous : null);
 }
 $("icon-grid").addEventListener("click", (event) => {
   const button = event.target.closest("[data-city]");
@@ -351,6 +411,7 @@ function fromHash() {
   if (byId.has(id)) choose(byId.get(id), { fly: true, hash: false });
 }
 resize();
+layoutIcons();
 choose(byId.get(new URLSearchParams(location.hash.slice(1)).get("city")), {
   hash: false,
 });
