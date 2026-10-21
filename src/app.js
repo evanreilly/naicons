@@ -172,8 +172,6 @@ function choose(
   $("selected-image").src = thumb;
   $("selected-image").alt = `${city.name} city icon`;
   $("selected-population").textContent = formatPopulation(city.population);
-  $("selected-year").textContent =
-    `${city.populationYear} ${city.country === "MX" ? "census" : "estimate"}`;
   $("download-icon").href = `/naicons/icons/${city.filename}`;
   $("download-icon").download = city.filename;
   $("marker-image").setAttribute("href", thumb);
