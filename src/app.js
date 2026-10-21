@@ -93,7 +93,7 @@ function move(transform) {
 function fly() {
   if (!selected) return;
   const [x, y] = projection([selected.longitude, selected.latitude]);
-  const k = Math.max(2.2, current.k);
+  const k = Math.max(2.4, current.k);
   const mapBox = $("map").getBoundingClientRect();
   const sheetBox = $("collection").getBoundingClientRect();
   const targetX = sheetBox.left + sheetBox.width / 2 - mapBox.left;
@@ -105,7 +105,7 @@ function fly() {
 }
 function overviewTransform() {
   const [x, y] = projection([-100, 45]);
-  const k = 1.65;
+  const k = 1.45;
   return zoomIdentity
     .translate(width * 0.5 - k * x, height * 0.48 - k * y)
     .scale(k);
@@ -431,10 +431,19 @@ function fromHash() {
   );
   if (city) choose(city, { fly: true });
 }
+// A reload starts a fresh exploration; opening a shared link still selects its city.
+const isReload =
+  performance.getEntriesByType("navigation")[0]?.type === "reload";
+if (isReload) history.replaceState(null, "", location.pathname);
 resize();
 layoutIcons();
 choose(
-  cityFromLink(cities, new URLSearchParams(location.hash.slice(1)).get("city")),
+  isReload
+    ? undefined
+    : cityFromLink(
+        cities,
+        new URLSearchParams(location.hash.slice(1)).get("city"),
+      ),
   { fly: true },
 );
 window.addEventListener("hashchange", fromHash);
