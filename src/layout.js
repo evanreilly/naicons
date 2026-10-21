@@ -16,7 +16,7 @@ export function packIcons(
     const index = ids.indexOf(selected);
     const center = anchor || {
       x: left + (index % columns) * columnStep + cell / 2,
-      y: gutter + Math.floor(index / columns) * step + cell / 2,
+      y: Math.floor(index / columns) * step + cell / 2,
     };
     reserved = {
       x: center.x - cardWidth / 2,
@@ -34,7 +34,7 @@ export function packIcons(
     do {
       point = {
         x: left + (slot % columns) * columnStep,
-        y: gutter + Math.floor(slot / columns) * step,
+        y: Math.floor(slot / columns) * step,
       };
       slot++;
     } while (
