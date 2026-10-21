@@ -7,6 +7,7 @@ import cities from "../data/cities.json";
 import topology from "../data/north-america.topo.json";
 import terrain from "../data/terrain-contours.json";
 import { packIcons } from "./layout.js";
+import { iconMotion } from "./motion.js";
 import {
   filterCities,
   countries,
@@ -249,23 +250,18 @@ function layoutIcons(previous, anchor, preserveScroll = false) {
     before: previous.get(node),
     after: node.getBoundingClientRect(),
   }));
+  const bounds = {
+    top: $("filters").getBoundingClientRect().bottom,
+    bottom: $("collection").getBoundingClientRect().bottom,
+  };
   for (const { node, before, after } of moves) {
-    if (
-      (node === active && anchor) ||
-      ((after.top > innerHeight || after.bottom < 0) &&
-        (!before || before.top > innerHeight || before.bottom < 0))
-    )
-      continue;
-    const x = before ? before.left - after.left : 0,
-      y = before ? before.top - after.top : 12;
-    if (before && Math.abs(x) < 0.5 && Math.abs(y) < 0.5) continue;
-    node.animate(
-      [
-        { transform: `translate(${x}px, ${y}px)`, opacity: before ? 1 : 0 },
-        { transform: "translate(0, 0)", opacity: 1 },
-      ],
-      { duration: 650, easing: "cubic-bezier(.22, 1, .36, 1)" },
-    );
+    if (node === active && anchor) continue;
+    const frames = iconMotion(before, after, bounds);
+    if (frames)
+      node.animate(frames, {
+        duration: 650,
+        easing: "cubic-bezier(.22, 1, .36, 1)",
+      });
   }
 }
 let gridWidth = 0;
