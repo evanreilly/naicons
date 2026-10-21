@@ -134,7 +134,7 @@ footer {
 }
 .country-shape {
   fill: #e4c9a6;
-  stroke: #000;
+  stroke: #b18d69;
   stroke-width: 0.7;
   vector-effect: non-scaling-stroke;
 }
@@ -268,7 +268,7 @@ body::after {
   bottom: 0;
   left: 0;
   width: 100%;
-  opacity: 0.25;
+  opacity: 0.35;
   background: linear-gradient(
     to bottom,
     rgb(245 234 214 / 0),

@@ -94,9 +94,14 @@ function fly() {
   if (!selected) return;
   const [x, y] = projection([selected.longitude, selected.latitude]);
   const k = Math.max(2.2, current.k);
-  move(
-    zoomIdentity.translate(width * 0.5 - k * x, height * 0.29 - k * y).scale(k),
+  const mapBox = $("map").getBoundingClientRect();
+  const sheetBox = $("collection").getBoundingClientRect();
+  const targetX = sheetBox.left + sheetBox.width / 2 - mapBox.left;
+  const targetY = Math.max(
+    145,
+    $("filters").getBoundingClientRect().top - mapBox.top - 46,
   );
+  move(zoomIdentity.translate(targetX - k * x, targetY - k * y).scale(k));
 }
 function overviewTransform() {
   const [x, y] = projection([-100, 45]);
@@ -430,5 +435,6 @@ resize();
 layoutIcons();
 choose(
   cityFromLink(cities, new URLSearchParams(location.hash.slice(1)).get("city")),
+  { fly: true },
 );
 window.addEventListener("hashchange", fromHash);
