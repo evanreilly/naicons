@@ -41,11 +41,44 @@ export function card(city) {
   return `<li><button class="city-card" type="button" data-city="${city.id}" title="${escape(label)}" aria-label="Explore ${escape(label)}" aria-pressed="false"><span class="icon-orb"><img src="/naicons/thumbs/${city.id}.webp" alt="" width="64" height="64" loading="lazy" decoding="async"></span><span class="card-caption"><span class="card-name">${escape(city.name)}</span><span class="card-population">${formatPopulation(city.population)}</span></span></button></li>`;
 }
 
-// Include the region and country so cities with the same name have distinct links.
-export const citySlug = (city) =>
-  normalize(`${city.name}-${city.region}-${city.country}`)
+const slugify = (value) =>
+  normalize(value)
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/^-|-$/g, "");
-export function cityFromLink(cities, value) {
-  return cities.find((city) => citySlug(city) === value || city.id === value);
+const linkIndexes = new WeakMap();
+function linkIndex(cities) {
+  if (linkIndexes.has(cities)) return linkIndexes.get(cities);
+  const groups = new Map(),
+    slugs = new Map(),
+    links = new Map();
+  for (const city of cities) {
+    const name = slugify(city.name);
+    if (!groups.has(name)) groups.set(name, []);
+    groups.get(name).push(city);
+  }
+  for (const city of cities) {
+    const name = slugify(city.name),
+      region = slugify(city.region),
+      duplicates = groups.get(name);
+    let slug = name;
+    if (duplicates.length > 1) {
+      slug += `-${region}`;
+      if (
+        duplicates.filter((candidate) => slugify(candidate.region) === region)
+          .length > 1
+      )
+        slug += `-${city.country.toLowerCase()}`;
+    }
+    slugs.set(city.id, slug);
+    links.set(slug, city);
+    links.set(city.id, city);
+    links.set(slugify(`${city.name}-${city.region}-${city.country}`), city);
+  }
+  const index = { slugs, links };
+  linkIndexes.set(cities, index);
+  return index;
 }
+export const citySlug = (city, cities) =>
+  cities ? linkIndex(cities).slugs.get(city.id) : slugify(city.name);
+export const cityFromLink = (cities, value) =>
+  linkIndex(cities).links.get(value);

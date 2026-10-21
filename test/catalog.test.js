@@ -125,14 +125,15 @@ test("terrain contours contain real western mountain elevations in geographic co
 });
 
 test("city permalinks are readable, unique, and compatible with old city codes", () => {
-  assert.equal(new Set(cities.map(citySlug)).size, cities.length);
   assert.equal(
-    citySlug(cities.find((c) => c.id === "us-08-20000")),
-    "denver-colorado-us",
+    new Set(cities.map((city) => citySlug(city, cities))).size,
+    cities.length,
   );
+  assert.equal(citySlug(cities.find((c) => c.id === "us-08-20000")), "denver");
+  assert.equal(cityFromLink(cities, "denver-colorado-us")?.name, "Denver");
   for (const city of cities) {
-    assert.match(citySlug(city), /^[a-z0-9]+(?:-[a-z0-9]+)*$/);
-    assert.equal(cityFromLink(cities, citySlug(city)), city);
+    assert.match(citySlug(city, cities), /^[a-z0-9]+(?:-[a-z0-9]+)*$/);
+    assert.equal(cityFromLink(cities, citySlug(city, cities)), city);
     assert.equal(cityFromLink(cities, city.id), city);
   }
   assert.equal(cityFromLink(cities, "unknown-city"), undefined);

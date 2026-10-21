@@ -176,7 +176,7 @@ function choose(
     .querySelector(`[data-city="${city.id}"]`)
     ?.setAttribute("aria-pressed", "true");
   if (layout) layoutIcons(previous, anchor, true);
-  if (hash) history.replaceState(null, "", `#city=${citySlug(city)}`);
+  if (hash) history.replaceState(null, "", `#city=${citySlug(city, cities)}`);
   placeMarker();
   if (shouldFly) fly();
   if (scroll)
@@ -408,7 +408,7 @@ let toastTimer;
 $("copy-link").addEventListener("click", async () => {
   try {
     await navigator.clipboard.writeText(
-      `${location.origin}/naicons#city=${citySlug(selected)}`,
+      `${location.origin}/naicons#city=${citySlug(selected, cities)}`,
     );
     $("toast").textContent = "City link copied";
   } catch {
