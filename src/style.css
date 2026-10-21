@@ -134,7 +134,7 @@ footer {
 }
 .country-shape {
   fill: #e4c9a6;
-  stroke: #b18d69;
+  stroke: #000;
   stroke-width: 0.7;
   vector-effect: non-scaling-stroke;
 }
