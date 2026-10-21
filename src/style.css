@@ -633,11 +633,6 @@ details p {
   }
 }
 
-#collection.scrolled #filters {
-  background: var(--paper);
-  box-shadow: 0 8px 12px var(--paper);
-}
-
 .terrain-contour {
   fill: none;
   stroke: #9b704c;

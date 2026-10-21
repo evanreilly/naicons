@@ -323,13 +323,6 @@ $("icon-grid").addEventListener("click", (event) => {
       { fly: true, scroll: false },
     );
 });
-$("collection").addEventListener(
-  "scroll",
-  () => {
-    $("collection").classList.toggle("scrolled", $("collection").scrollTop > 8);
-  },
-  { passive: true },
-);
 $("filters").addEventListener("submit", (event) => event.preventDefault());
 $("search").addEventListener("input", update);
 $("sort").addEventListener("click", () => {
