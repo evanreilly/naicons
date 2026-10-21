@@ -31,11 +31,18 @@ test("complete inventory has unique PNGs, valid coordinates, and five documented
     assert.match(c.populationSource, /^https?:\/\//);
   }
 });
-test("default smallest-first ordering and search across accented names, regions, and countries", () => {
+test("default largest-first ordering and search across accented names, regions, and countries", () => {
   const sorted = filterCities(cities);
-  assert.equal(sorted[0].name, "Burlington");
+  assert.equal(
+    sorted[0].population,
+    Math.max(...cities.map((c) => c.population)),
+  );
+  assert.equal(
+    filterCities(cities, { sort: "population-asc" })[0].name,
+    "Burlington",
+  );
   assert.ok(
-    sorted.every((c, i) => !i || sorted[i - 1].population <= c.population),
+    sorted.every((c, i) => !i || sorted[i - 1].population >= c.population),
   );
   assert.equal(
     filterCities(cities, { query: "burlington vermont" })[0].name,

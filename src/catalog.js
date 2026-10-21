@@ -6,7 +6,7 @@ export const normalize = (value) =>
     .toLowerCase();
 export function filterCities(
   cities,
-  { query = "", country = "all", sort = "population-asc" } = {},
+  { query = "", country = "all", sort = "population-desc" } = {},
 ) {
   const words = normalize(query).trim().split(/\s+/).filter(Boolean);
   return cities

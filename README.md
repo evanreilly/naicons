@@ -4,7 +4,7 @@
 
 544 transparent, 1024 × 1024 city icons made for [TrainGame](https://traingame.io),
 with a searchable directory and interactive map. The default order is population,
-smallest first. Click Population to reverse the order; the arrow rotates and icons
+largest first. Click Population to reverse the order; the arrow rotates and icons
 tween into place. Reduced-motion preferences disable the animation. Search city
 names, states/provinces, countries, or icon subjects.
 Click a circle to expand it and enlarge its icon on the map. Click it again to collapse. Download individual PNGs or the whole pack.
@@ -53,7 +53,7 @@ npm run dev
 Open http://localhost:8791/naicons. `npm run build` writes `dist/naicons`, including
 the full PNG pack. All map data and assets are served locally; no map API key,
 external font, analytics, or tile service is needed. Search and map controls use
-JavaScript; the initial ascending gallery remains readable without JavaScript.
+JavaScript; the initial descending gallery remains readable without JavaScript.
 
 ## Deployment
 

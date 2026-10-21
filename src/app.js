@@ -19,9 +19,9 @@ const $ = (id) => document.getElementById(id);
 const byId = new Map(cities.map((c) => [c.id, c]));
 const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
 let selected,
-  visible = cities,
+  visible = filterCities(cities),
   country = "all",
-  descending = false,
+  descending = true,
   width = 800,
   height = 565,
   current = zoomIdentity;
