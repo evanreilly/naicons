@@ -604,8 +604,7 @@ details p {
   background: #eedbc0;
   border-color: #af815a;
 }
-.sort-arrow,
-.country-arrow {
+.sort-arrow {
   fill: none;
   stroke: currentColor;
   stroke-width: 1.6;
@@ -638,8 +637,7 @@ details p {
   }
 }
 @media (prefers-reduced-motion: reduce) {
-  .sort-arrow,
-  .country-arrow {
+  .sort-arrow {
     transition: none;
   }
 }
@@ -662,7 +660,7 @@ details p {
 }
 #country {
   min-width: 124px;
-  justify-content: space-between;
+  justify-content: center;
 }
 #search:focus,
 #search:focus-visible {

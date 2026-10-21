@@ -261,7 +261,6 @@ $("sort").addEventListener("click", () => {
   update({ animate: true });
 });
 const countryCycle = ["all", "US", "CA", "MX"];
-let countryTurns = 0;
 function updateCountryButton() {
   const index = countryCycle.indexOf(country);
   const name = country === "all" ? "All countries" : countries[country];
@@ -273,13 +272,10 @@ function updateCountryButton() {
     `Country: ${name}. Click for ${nextName}.`,
   );
   $("country").title = `Next: ${nextName}`;
-  $("country").querySelector("svg").style.transform =
-    `rotate(${countryTurns * 360}deg)`;
 }
 $("country").addEventListener("click", () => {
   country =
     countryCycle[(countryCycle.indexOf(country) + 1) % countryCycle.length];
-  countryTurns += 1;
   updateCountryButton();
   update({ animate: true });
 });
