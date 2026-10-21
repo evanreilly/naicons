@@ -258,6 +258,24 @@ footer {
   scrollbar-color: #bfa184 transparent;
   padding-bottom: 24px;
 }
+/* A light paper wash keeps the map visible behind the icon wall. */
+body::after {
+  content: "";
+  position: fixed;
+  z-index: 1;
+  pointer-events: none;
+  height: calc(50svh + 85px);
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  opacity: 0.25;
+  background: linear-gradient(
+    to bottom,
+    rgb(245 234 214 / 0),
+    rgb(245 234 214 / 0.76) 130px,
+    rgb(245 234 214 / 0.94) 420px
+  );
+}
 footer {
   background: rgb(245 234 214 / 0.94);
 }
