@@ -217,7 +217,7 @@ function captureIcons() {
 }
 function layoutIcons(previous, anchor, preserveScroll = false) {
   const grid = $("icon-grid");
-  const scrollTop = $("collection").scrollTop;
+  const scrollTop = $("icon-scroll").scrollTop;
   const previousHeight = grid.offsetHeight;
   const mobile = matchMedia("(max-width: 700px)").matches;
   const cell = mobile ? 42 : 46,
@@ -249,9 +249,9 @@ function layoutIcons(previous, anchor, preserveScroll = false) {
     node.style.top = `${point.y}px`;
   }
   if (preserveScroll) {
-    $("collection").scrollTop = scrollTop;
+    $("icon-scroll").scrollTop = scrollTop;
     requestAnimationFrame(() => {
-      $("collection").scrollTop = scrollTop;
+      $("icon-scroll").scrollTop = scrollTop;
     });
   }
   if (!previous || reduced) return;
@@ -261,8 +261,8 @@ function layoutIcons(previous, anchor, preserveScroll = false) {
     after: node.getBoundingClientRect(),
   }));
   const bounds = {
-    top: $("filters").getBoundingClientRect().bottom,
-    bottom: $("collection").getBoundingClientRect().bottom,
+    top: $("icon-scroll").getBoundingClientRect().top,
+    bottom: $("icon-scroll").getBoundingClientRect().bottom,
   };
   for (const { node, before, after } of moves) {
     if (node === active && anchor) continue;
